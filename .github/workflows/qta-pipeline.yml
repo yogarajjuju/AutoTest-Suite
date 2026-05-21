@@ -1,0 +1,31 @@
+name: Enterprise Test Automation Pipeline
+
+# 1. When should this run? Every time you push code to 'main'.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# 2. What should it do?
+jobs:
+  run-automation-tests:
+    # Boot up a clean Ubuntu Linux server in the cloud
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step A: Download your code into the server
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Step B: Install Java 17
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    # Step C: Wake up Maven and run the Selenium robot
+    - name: Run Selenium Tests
+      run: mvn clean test
